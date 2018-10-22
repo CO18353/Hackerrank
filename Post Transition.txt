@@ -28,71 +28,89 @@ struct town
 };
 
 typedef struct town town;
-
-void print_all_packages(town t) {
+void print_all_packages(town t)
+{
     printf("%s:\n",t.name);
-    for(int i=0; i<t.offices_count; i++)
-    {
-        printf("\t%d:\n",i);
-        for(int j=0; j<t.offices[i].packages_count; j++)
-            printf("\t\t%s\n",t.offices[i].packages[j].id);
-    }
+	int a=0;
+    while(a<t.offices_count)
+	{
+		printf("\t%d:\n",a);
+		int b=0;
+		while(b<t.offices[a].packages_count)
+		{
+			printf("\t\t%s\n",t.offices[a].packages[b].id);
+			b++;
+		}
+		a++;	
+	}
+    
 }
 
-void send_all_acceptable_packages(town* source, int source_office_index, town* target, int target_office_index) {    
+void send_all_acceptable_packages(town* source, int source_office_index, town* target, int target_office_index)
+{    
     int max = target->offices[target_office_index].max_weight;
     int min = target->offices[target_office_index].min_weight;
     package* temp = NULL;
-    int notaccept = 0, weight;
+    int w, na=0;
     post_office* s = source->offices + source_office_index;
-    post_office* d = target->offices + target_office_index;
-                         
-    for(int i=0; i < s->packages_count; i++)
+    post_office* t = target->offices + target_office_index;
+    int a=0;                  
+    while(a< s->packages_count)
     {
-        weight = s->packages[i].weight;
-        if(weight <= max && weight >= min)
+        w = s->packages[a].weight;
+        if(w <= max && w >= min)
         {
-            d->packages_count++;
-            d->packages = (package*)realloc(d->packages, sizeof(package) * d->packages_count);
-            d->packages[d->packages_count-1] = s->packages[i];         
+            t->packages_count++;
+            t->packages = (package*)realloc(t->packages, sizeof(package) * t->packages_count);
+            t->packages[t->packages_count-1] = s->packages[a];         
         }
         else
         {
-            notaccept++;
-            temp = (package*)realloc(temp, sizeof(package) * notaccept);
-            temp[notaccept-1] = s->packages[i];
+            na++;
+            temp = (package*)realloc(temp, sizeof(package) * na);
+            temp[na-1] = s->packages[a];
         }
+	a++;
     }
     s->packages = temp;
-    s->packages_count = notaccept;
+    s->packages_count = na;
 }
  
- town town_with_most_packages(town* towns, int towns_count) {
+ town town_with_most_packages(town* towns, int towns_count)
+{
     town max_town;
-    int sum, max = 0;
-    for(int i=0; i<towns_count; i++)
+    int s, m = 0;
+    int a=0;
+    while(a<towns_count)
     {
-        sum = 0;
-        for(int j=0; j<towns[i].offices_count; j++)
-            sum += towns[i].offices[j].packages_count;
-        if(max < sum)
+        s = 0;
+	int b=0;
+        while(b<towns[a].offices_count)
+	{
+            s+= towns[a].offices[b].packages_count;
+        	b++;
+	}
+	if(m < s)
         {
-            max_town = towns[i];
-            max = sum;
+            max_town = towns[a];
+            m = s;
         }
+	a++;
     }
     return max_town;
 }
 
-town* find_town(town* towns, int towns_count, char* name) {
-    for(int i=0; i<towns_count; i++)
+town* find_town(town* towns, int towns_count, char* name) 
+{
+	int a=0;
+    while(a<towns_count)
     {
-        if(strcmp(towns[i].name,name) == 0)
-            return towns + i; 
-    }
+        if(strcmp(towns[a].name,name) == 0)
+            return towns + a; 
+	a++; 
+   }
     return NULL;
 }
-
 int main()
 {
 	int towns_count;
