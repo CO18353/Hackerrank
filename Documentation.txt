@@ -23,15 +23,6 @@ struct document {
     struct paragraph* data;
     int paragraph_count;//denotes number of paragraphs in a document
 };
-
-
-
-
-
-
-
-
-
 void aw(struct sentence *sen, char *data) 
 {
     struct word *word = malloc(sizeof(struct word));
@@ -51,7 +42,8 @@ void as(struct paragraph *par, char *data)
     sen->data = NULL;
     sen->word_count = 0;
 
-    while (o < s) {
+    for(;o<s;o+=l+1) 
+	{
         char *s = strchr(data + o, ' ');
         size_t l = s == NULL ? s - o : s - data - o;
 
@@ -60,8 +52,7 @@ void as(struct paragraph *par, char *data)
         strncpy(word, data + o, l);
 
         aw(sen, word);
-        o += l + 1;
-    }
+        }
 
     par->data = (struct sentence *) realloc(par->data, sizeof(struct sentence) * (par->sentence_count + 1));
     par->data[par->sentence_count] = *sen;
@@ -132,15 +123,6 @@ struct paragraph kth_paragraph(struct document doc, int k)
 {
     return doc.data[k - 1];
 }
-
-
-
-
-
-
-
-
-
 void print_word(struct word w) {
     printf("%s", w.data);
 }
